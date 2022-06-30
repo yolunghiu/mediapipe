@@ -1,4 +1,3 @@
-
 # Note: this project has 3 source files
 # From now on I put all calculators into separate cpp files
 
