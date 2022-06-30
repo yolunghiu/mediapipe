@@ -1,17 +1,3 @@
-// Copyright 2019 The MediaPipe Authors.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
 // A simple main function to run a MediaPipe graph.
 #include <cstdlib>
 #include <fstream>
@@ -58,7 +44,7 @@ ABSL_FLAG(std::string, output_side_packets_file, "",
           "The name of the local file to output all side packets specified "
           "with --output_side_packets. ");
 
-absl::Status OutputStreamToLocalFile(mediapipe::OutputStreamPoller& poller) {
+absl::Status OutputStreamToLocalFile(mediapipe::OutputStreamPoller &poller) {
   std::ofstream file;
   file.open(absl::GetFlag(FLAGS_output_stream_file));
   mediapipe::Packet packet;
@@ -74,14 +60,14 @@ absl::Status OutputStreamToLocalFile(mediapipe::OutputStreamPoller& poller) {
   return absl::OkStatus();
 }
 
-absl::Status OutputSidePacketsToLocalFile(mediapipe::CalculatorGraph& graph) {
+absl::Status OutputSidePacketsToLocalFile(mediapipe::CalculatorGraph &graph) {
   if (!absl::GetFlag(FLAGS_output_side_packets).empty() &&
       !absl::GetFlag(FLAGS_output_side_packets_file).empty()) {
     std::ofstream file;
     file.open(absl::GetFlag(FLAGS_output_side_packets_file));
     std::vector<std::string> side_packet_names =
         absl::StrSplit(absl::GetFlag(FLAGS_output_side_packets), ',');
-    for (const std::string& side_packet_name : side_packet_names) {
+    for (const std::string &side_packet_name : side_packet_names) {
       ASSIGN_OR_RETURN(auto status_or_packet,
                        graph.GetOutputSidePacket(side_packet_name));
       file << absl::StrCat(side_packet_name, ":",
@@ -111,7 +97,7 @@ absl::Status RunMPPGraph() {
   if (!absl::GetFlag(FLAGS_input_side_packets).empty()) {
     std::vector<std::string> kv_pairs =
         absl::StrSplit(absl::GetFlag(FLAGS_input_side_packets), ',');
-    for (const std::string& kv_pair : kv_pairs) {
+    for (const std::string &kv_pair : kv_pairs) {
       std::vector<std::string> name_and_value = absl::StrSplit(kv_pair, '=');
       RET_CHECK(name_and_value.size() == 2);
       RET_CHECK(!mediapipe::ContainsKey(input_side_packets, name_and_value[0]));
@@ -141,7 +127,7 @@ absl::Status RunMPPGraph() {
   return OutputSidePacketsToLocalFile(graph);
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   google::InitGoogleLogging(argv[0]);
   absl::ParseCommandLine(argc, argv);
   absl::Status run_status = RunMPPGraph();
