@@ -10,7 +10,7 @@ mediapipe_proto_library(
 )
 
 # This is our main target
-# NOte the dependency name: goblin_calculator14_cc_proto (NOT goblin_calculator14_proto !)
+# Note the dependency name: goblin_calculator14_cc_proto (NOT goblin_calculator14_proto !)
 cc_binary(
     name="1_4",
     srcs=["main.cpp", "goblin_calculator14.cpp"],
