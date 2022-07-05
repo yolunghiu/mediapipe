@@ -1,5 +1,4 @@
 /// Example 1.5 : Calculator with side packets
-/// By Oleksiy Grechnyev, IT-JIM
 /// Here I create a custom calculator with side packets
 
 #include <iostream>
@@ -9,8 +8,8 @@
 #include "mediapipe/framework/port/parse_text_proto.h"
 #include "mediapipe/framework/port/status.h"
 
-//==============================================================================
-mediapipe::Status run(){
+mediapipe::Status run()
+{
     using namespace std;
     // From now on I'll use mediapipe namespace
     using namespace mediapipe;
@@ -29,21 +28,24 @@ mediapipe::Status run(){
     }
     )";
 
-    // Let us now parse the string properly this time, checking if the parse is successful
+    // Let us now parse the string properly this time, checking if the parse is
+    // successful
     CalculatorGraphConfig config;
-    if (!ParseTextProto<mediapipe::CalculatorGraphConfig>(protoG, &config)) {
-        // mediapipe::Status is actually absl::Status (at least in the current mediapipe)
-        // So we can create BAD statuses like this
+    if (!ParseTextProto<mediapipe::CalculatorGraphConfig>(protoG, &config))
+    {
+        // mediapipe::Status is actually absl::Status (at least in the current
+        // mediapipe) So we can create BAD statuses like this
         return absl::InternalError("Cannot parse the graph config !");
-    } 
+    }
 
     // Create MP Graph and intialize it with config
     CalculatorGraph graph;
     MP_RETURN_IF_ERROR(graph.Initialize(config));
 
     // Add observer to "out:
-    auto cb = [](const Packet &packet)->Status{
-        cout << packet.Timestamp() << ": RECEIVED PACKET " << packet.Get<double>() << endl;
+    auto cb = [](const Packet& packet) -> Status {
+        cout << packet.Timestamp() << ": RECEIVED PACKET "
+             << packet.Get<double>() << endl;
         return OkStatus();
     };
     MP_RETURN_IF_ERROR(graph.ObserveOutputStream("out", cb));
@@ -54,9 +56,10 @@ mediapipe::Status run(){
     MP_RETURN_IF_ERROR(graph.StartRun({{"a", sideA}}));
 
     // Send input packets to the graph, stream "in", then close it
-    for (int i=0; i<13; ++i) {
+    for (int i = 0; i < 13; ++i)  // 0.0~1.2
+    {
         Timestamp ts(i);
-        Packet packet = MakePacket<double>(i*0.1).At(ts);
+        Packet packet = MakePacket<double>(i * 0.1).At(ts);
         MP_RETURN_IF_ERROR(graph.AddPacketToInputStream("in", packet));
     }
     graph.CloseInputStream("in");
@@ -66,8 +69,8 @@ mediapipe::Status run(){
     return OkStatus();
 }
 
-//==============================================================================
-int main(){
+int main()
+{
     using namespace std;
     cout << "Example 1.5 : Calculator with side packets" << endl;
     // Call run(), which return a status

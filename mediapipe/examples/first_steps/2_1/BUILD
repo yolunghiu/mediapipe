@@ -1,5 +1,5 @@
 cc_binary(
-    name="2_1",
+    name="2_1_camera",
     srcs=["main.cpp"],
     deps=[
         "//mediapipe/framework:calculator_framework",
