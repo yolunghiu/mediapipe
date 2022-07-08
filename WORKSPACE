@@ -114,8 +114,11 @@ http_archive(
 # libyuv
 http_archive(
     name = "libyuv",
+    sha256 = "b099c10164e102311a7539a3bf5bd05a25d8ada18cce7854e997e55aeddb3484",
+
     # Error: operand type mismatch for `vbroadcastss' caused by commit 8a13626e42f7fdcf3a6acbb0316760ee54cda7d8.
-    urls = ["https://chromium.googlesource.com/libyuv/libyuv/+archive/2525698acba9bf9b701ba6b4d9584291a1f62257.tar.gz"],
+    #urls = ["https://chromium.googlesource.com/libyuv/libyuv/+archive/2525698acba9bf9b701ba6b4d9584291a1f62257.tar.gz"],
+    urls = ["file:///home/ark/Downloads/libyuv-2525698acba9bf9b701ba6b4d9584291a1f62257.tar.gz"],
     build_file = "@//third_party:libyuv.BUILD",
 )
 
