@@ -107,7 +107,7 @@ mediapipe::Status run()
         mediapipe::Timestamp ts(i);
 
         // mediapipe::MakePacket creates a packet (copies or moves data), use
-        // mediapipe::Adapt() instead to avoid copy/move
+        // mediapipe::Adopt() instead to avoid copy/move
         mediapipe::Packet packet =
             mediapipe::MakePacket<string>("packet" + to_string(i)).At(ts);
         //            mediapipe::MakePacket<double>(i * 0.1).At(ts);

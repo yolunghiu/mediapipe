@@ -32,3 +32,6 @@ DerivePointerAlignment: false
 
 IndentWidth: 4
 TabWidth: 4
+
+# 每行字符的长度
+ColumnLimit: 108

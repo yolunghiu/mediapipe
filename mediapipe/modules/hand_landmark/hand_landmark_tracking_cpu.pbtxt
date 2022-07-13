@@ -33,10 +33,10 @@ output_stream: "LANDMARKS:multi_hand_landmarks"
 
 # Collection of detected/predicted hand world landmarks.
 # (std::vector<LandmarkList>)
-#
+
 # World landmarks are real-world 3D coordinates in meters with the origin in the
 # center of the hand bounding box calculated from the landmarks.
-#
+
 # WORLD_LANDMARKS shares the same landmark topology as LANDMARKS. However,
 # LANDMARKS provides coordinates (in pixels) of a 3D object projected onto the
 # 2D image surface, while WORLD_LANDMARKS provides coordinates (in meters) of
@@ -54,9 +54,11 @@ output_stream: "HANDEDNESS:multi_handedness"
 # Extra outputs (for debugging, for instance).
 # Detected palms. (std::vector<Detection>)
 output_stream: "PALM_DETECTIONS:palm_detections"
+
 # Regions of interest calculated based on landmarks.
 # (std::vector<NormalizedRect>)
 output_stream: "HAND_ROIS_FROM_LANDMARKS:hand_rects"
+
 # Regions of interest calculated based on palm detections.
 # (std::vector<NormalizedRect>)
 output_stream: "HAND_ROIS_FROM_PALM_DETECTIONS:hand_rects_from_palm_detections"

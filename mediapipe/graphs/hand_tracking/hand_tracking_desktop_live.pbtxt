@@ -1,7 +1,5 @@
-# MediaPipe graph that performs hands tracking on desktop with TensorFlow
-# Lite on CPU.
-# Used in the example in
-# mediapipe/examples/desktop/hand_tracking:hand_tracking_cpu.
+# MediaPipe graph that performs hands tracking on desktop with TensorFlow Lite on CPU.
+# Used in the example in mediapipe/examples/desktop/hand_tracking:hand_tracking_cpu.
 
 # CPU image. (ImageFrame)
 input_stream: "input_video"
@@ -21,11 +19,14 @@ node {
 }
 
 # Detects/tracks hand landmarks.
+# mediapipe/modules/hand_landmark/hand_landmark_model_loader.pbtxt
+# HandLandmarkTrackingCpu被定义成了subgraph
 node {
   calculator: "HandLandmarkTrackingCpu"
   input_stream: "IMAGE:input_video"
   input_side_packet: "NUM_HANDS:num_hands"
-  output_stream: "LANDMARKS:landmarks"
+  #output_stream: "LANDMARKS:landmarks"
+  output_stream: "LANDMARKS:multi_hand_landmarks"
   output_stream: "HANDEDNESS:handedness"
   output_stream: "PALM_DETECTIONS:multi_palm_detections"
   output_stream: "HAND_ROIS_FROM_LANDMARKS:multi_hand_rects"
@@ -38,7 +39,8 @@ node {
   calculator: "HandRendererSubgraph"
   input_stream: "IMAGE:input_video"
   input_stream: "DETECTIONS:multi_palm_detections"
-  input_stream: "LANDMARKS:landmarks"
+  #input_stream: "LANDMARKS:landmarks"
+  input_stream: "LANDMARKS:multi_hand_landmarks"
   input_stream: "HANDEDNESS:handedness"
   input_stream: "NORM_RECTS:0:multi_palm_rects"
   input_stream: "NORM_RECTS:1:multi_hand_rects"

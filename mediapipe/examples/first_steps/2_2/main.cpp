@@ -1,5 +1,5 @@
 /// Example 2.2 : Video pipeline with ImageCroppingCalculator and
-/// ScaleImageCalculator Here I show how to use standard image claculators from
+/// ScaleImageCalculator. Here I show how to use standard image claculators from
 /// MP ACHTUNG! This pipeline is still NOT real-time!
 
 #include <atomic>
@@ -66,16 +66,14 @@ mediapipe::Status run()
     CalculatorGraphConfig config;
     if (!ParseTextProto<mediapipe::CalculatorGraphConfig>(protoG, &config))
     {
-        // mediapipe::Status is actually absl::Status (at least in the current
-        // mediapipe) So we can create BAD statuses like this
-        return absl::InternalError("Cannot parse the graph config !");
+        return absl::InternalError("Cannot parse the graph config!");
     }
     CalculatorGraph graph;
     MP_RETURN_IF_ERROR(graph.Initialize(config));
 
     // Now we use cv::imshow() in 2 different threads
     // For me it worked even without mutex, but let's protect imshow()
-    // wth a mutex to be safe!
+    // with a mutex to be safe!
     mutex mutexImshow;
 
     // We use an atomic stop flag for a soft quit, without giving graph errors

@@ -39,6 +39,7 @@ ABSL_FLAG(std::string,
 absl::Status RunMPPGraph()
 {
     using namespace std;
+    using namespace mediapipe;
 
     // 读取config文件，将文件内容输出到log中
     string calculator_graph_config_contents;
@@ -54,6 +55,13 @@ absl::Status RunMPPGraph()
     LOG(INFO) << "Initialize the calculator graph.";
     mediapipe::CalculatorGraph graph;
     MP_RETURN_IF_ERROR(graph.Initialize(config));
+
+    // Add observer to "out:
+    auto cb = [](const Packet& packet) -> Status {
+        cout << "callback after output_video" << endl;
+        return OkStatus();
+    };
+    MP_RETURN_IF_ERROR(graph.ObserveOutputStream("output_video", cb));
 
     // video or camera
     LOG(INFO) << "Initialize the camera or load the video.";
@@ -81,8 +89,8 @@ absl::Status RunMPPGraph()
     // 从poller中获取结果，同步机制，也可使用回调函数
     LOG(INFO) << "Start running the calculator graph.";
     ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller poller, graph.AddOutputStreamPoller(kOutputStream));
-    ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller multi_hand_landmarks_poller,
-                     graph.AddOutputStreamPoller(kMultiHandLandmarksOutputStream));
+//    ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller multi_hand_landmarks_poller,
+//                     graph.AddOutputStreamPoller(kMultiHandLandmarksOutputStream));
 
     // run graph
     MP_RETURN_IF_ERROR(graph.StartRun({}));
@@ -128,6 +136,7 @@ absl::Status RunMPPGraph()
             kInputStream,
             mediapipe::Adopt(input_frame.release()).At(mediapipe::Timestamp(frame_timestamp_us))));
 
+        ///todo
         // 获取运行结果，失败的话就结束
         // 获取output_video
         mediapipe::Packet packet;

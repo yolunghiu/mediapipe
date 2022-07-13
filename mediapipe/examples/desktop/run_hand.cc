@@ -1,4 +1,3 @@
-// An example of sending OpenCV webcam frames into a MediaPipe graph.
 #include <cstdlib>
 #include <typeinfo>
 
@@ -18,9 +17,9 @@
 constexpr char kInputStream[] = "input_video";
 constexpr char kOutputStream[] = "output_video";
 constexpr char kWindowName[] = "MediaPipe";
-constexpr char kMultiHandLandmarksOutputStream[] = "multi_hand_landmarks";
+constexpr char kMultiHandLandmarksOutputStream[] = "landmarks";
 
-// mediapipe/graphs/hand_tracking/hand_tracking_desktop_live.pbtxt
+// /home/ark/res/deep-learning/mediapipe/mediapipe/graphs/hand_tracking/hand.pbtxt
 ABSL_FLAG(std::string,
           calculator_graph_config_file,
           "",
@@ -65,22 +64,17 @@ absl::Status RunMPPGraph()
         capture.open(cv::CAP_ANY);
     RET_CHECK(capture.isOpened());
 
-    // create window if no save video
-    cv::VideoWriter writer;
-    const bool save_video = !absl::GetFlag(FLAGS_output_video_path).empty();
-    if (!save_video)
-    {
-        cv::namedWindow(kWindowName, /*flags=WINDOW_AUTOSIZE*/ 1);
+    cv::namedWindow(kWindowName, /*flags=WINDOW_AUTOSIZE*/ 1);
 #if (CV_MAJOR_VERSION >= 3) && (CV_MINOR_VERSION >= 2)
-        capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
-        capture.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
-        capture.set(cv::CAP_PROP_FPS, 24);
+    capture.set(cv::CAP_PROP_FRAME_WIDTH, 640);
+    capture.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
+    capture.set(cv::CAP_PROP_FPS, 24);
 #endif
-    }
 
     // 从poller中获取结果，同步机制，也可使用回调函数
     LOG(INFO) << "Start running the calculator graph.";
-    ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller poller, graph.AddOutputStreamPoller(kOutputStream));
+    //    ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller poller,
+    //    graph.AddOutputStreamPoller(kOutputStream));
     ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller multi_hand_landmarks_poller,
                      graph.AddOutputStreamPoller(kMultiHandLandmarksOutputStream));
 
@@ -130,20 +124,19 @@ absl::Status RunMPPGraph()
 
         // 获取运行结果，失败的话就结束
         // 获取output_video
-        mediapipe::Packet packet;
-        if (!poller.Next(&packet)) break;
-        auto& output_frame = packet.Get<mediapipe::ImageFrame>();
-
+        /* mediapipe::Packet packet;
+         if (!poller.Next(&packet)) break;
+         auto& output_frame = packet.Get<mediapipe::ImageFrame>();*/
         // 获取multi_hand_landmarks
-        /*mediapipe::Packet multi_hand_landmarks_packet;
+        mediapipe::Packet multi_hand_landmarks_packet;
         if (!multi_hand_landmarks_poller.Next(&multi_hand_landmarks_packet)) break;
         const auto& multi_hand_landmarks =
-            multi_hand_landmarks_packet.Get<std::vector<mediapipe::NormalizedLandmarkList>>();
+            multi_hand_landmarks_packet.Get<vector<mediapipe::NormalizedLandmarkList>>();
         LOG(INFO) << "Type of multi_hand_landmarks: " << typeid(multi_hand_landmarks).name();
-        LOG(INFO) << "Size of lanmark list: " << multi_hand_landmarks.size();*/
+        LOG(INFO) << "Size of lanmark list: " << multi_hand_landmarks.size();
 
         // Convert back to opencv for display or saving.
-        cv::Mat output_frame_mat = mediapipe::formats::MatView(&output_frame);
+        /*cv::Mat output_frame_mat = mediapipe::formats::MatView(&output_frame);
         cv::cvtColor(output_frame_mat, output_frame_mat, cv::COLOR_RGB2BGR);
         if (save_video)
         {
@@ -164,11 +157,10 @@ absl::Status RunMPPGraph()
             // Press any key to exit.
             const int pressed_key = cv::waitKey(5);
             if (pressed_key >= 0 && pressed_key != 255) grab_frames = false;
-        }
+        }*/
     }
 
     LOG(INFO) << "Shutting down.";
-    if (writer.isOpened()) writer.release();
     MP_RETURN_IF_ERROR(graph.CloseInputStream(kInputStream));
     return graph.WaitUntilDone();
 }

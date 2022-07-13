@@ -4,18 +4,23 @@ type: "HandRendererSubgraph"
 
 # CPU image. (ImageFrame)
 input_stream: "IMAGE:input_image"
+
 # Collection of detected/predicted hands, each represented as a list of
 # landmarks. (std::vector<NormalizedLandmarkList>)
 input_stream: "LANDMARKS:multi_hand_landmarks"
+
 # Handedness of the detected hand (i.e. is hand left or right).
 # (std::vector<ClassificationList>)
 input_stream: "HANDEDNESS:multi_handedness"
+
 # Regions of interest calculated based on palm detections.
 # (std::vector<NormalizedRect>)
 input_stream: "NORM_RECTS:0:multi_palm_rects"
+
 # Regions of interest calculated based on landmarks.
 # (std::vector<NormalizedRect>)
 input_stream: "NORM_RECTS:1:multi_hand_rects"
+
 # Detected palms. (std::vector<Detection>)
 input_stream: "DETECTIONS:palm_detections"
 
